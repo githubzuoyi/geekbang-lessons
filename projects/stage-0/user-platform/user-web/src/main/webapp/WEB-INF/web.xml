@@ -33,12 +33,23 @@
     <servlet>
         <servlet-name>FrontControllerServlet</servlet-name>
         <servlet-class>org.geektimes.web.mvc.FrontControllerServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>FrontControllerServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/hi/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MyDispatcherServlet</servlet-name>
+        <servlet-class>org.eric.mvc.servlet.MyDispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>MyDispatcherServlet</servlet-name>
+        <url-pattern>/hello/*</url-pattern>
     </servlet-mapping>
 
     <filter>

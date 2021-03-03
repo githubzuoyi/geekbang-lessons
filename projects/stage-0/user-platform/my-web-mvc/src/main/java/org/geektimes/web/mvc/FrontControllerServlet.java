@@ -149,7 +149,16 @@ public class FrontControllerServlet extends HttpServlet {
                         requestDispatcher.forward(request, response);
                         return;
                     } else if (controller instanceof RestController) {
-                        // TODO
+                        // TODO 通过反射处理
+                        RestController restController = RestController.class.cast(controller);
+                        String viewPath = (String) handlerMethodInfo.getHandlerMethod().invoke(restController, null);
+                        ServletContext servletContext = request.getServletContext();
+                        if (!viewPath.startsWith("/")) {
+                            viewPath = "/" + viewPath;
+                        }
+                        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
+                        requestDispatcher.forward(request, response);
+                        return;
                     }
 
                 }
