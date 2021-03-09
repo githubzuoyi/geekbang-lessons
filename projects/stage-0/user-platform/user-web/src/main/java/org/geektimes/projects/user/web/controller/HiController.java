@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-@Path("/hi")
+@Path("/user")
 public class HiController implements Controller {
 
     @GET

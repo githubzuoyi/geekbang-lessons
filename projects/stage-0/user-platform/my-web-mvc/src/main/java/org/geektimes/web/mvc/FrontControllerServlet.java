@@ -64,9 +64,10 @@ public class FrontControllerServlet extends HttpServlet {
                 Path pathFromMethod = method.getAnnotation(Path.class);
                 if (pathFromMethod != null) {
                     requestPath += pathFromMethod.value();
+                    handleMethodInfoMapping.put(requestPath,
+                            new HandlerMethodInfo(requestPath, method, supportedHttpMethods));
                 }
-                handleMethodInfoMapping.put(requestPath,
-                        new HandlerMethodInfo(requestPath, method, supportedHttpMethods));
+
             }
             controllersMapping.put(requestPath, controller);
         }
@@ -151,7 +152,7 @@ public class FrontControllerServlet extends HttpServlet {
                     } else if (controller instanceof RestController) {
                         // TODO 通过反射处理
                         RestController restController = RestController.class.cast(controller);
-                        String viewPath = (String) handlerMethodInfo.getHandlerMethod().invoke(restController, null);
+                        String viewPath = (String) handlerMethodInfo.getHandlerMethod().invoke(restController, request,response);
                         ServletContext servletContext = request.getServletContext();
                         if (!viewPath.startsWith("/")) {
                             viewPath = "/" + viewPath;

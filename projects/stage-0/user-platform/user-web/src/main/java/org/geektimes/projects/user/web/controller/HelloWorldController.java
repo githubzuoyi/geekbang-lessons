@@ -16,7 +16,7 @@ import javax.ws.rs.Path;
 public class HelloWorldController implements Controller {
 
     @GET
-    @Path("/world") // /hello/world -> HelloWorldController
+    @Path("/login") // /hello/world -> HelloWorldController
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         return "login-form.jsp";
     }

@@ -1,7 +1,11 @@
 package org.geektimes.projects.user.sql;
 
+import org.apache.derby.iapi.db.Database;
+import org.geektimes.projects.user.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -11,18 +15,41 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnectionManager {
 
+    private Logger LOGGER = Logger.getLogger(DBConnectionManager.class.getName());
+
     private Connection connection;
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public void setConnection() {
+        this.connection = getConnection();
     }
 
     public Connection getConnection() {
-        return this.connection;
+        ComponentContext componentContext = ComponentContext.getInstance();
+        DataSource dataSource = componentContext.getComponent("jdbc/app");
+
+        try {
+            Connection connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "获取数据库连接失败");
+        }
+
+        if (connection != null) {
+            LOGGER.log(Level.INFO, "数据库连接成功");
+        } else {
+            LOGGER.log(Level.SEVERE, "数据库连接失败");
+        }
+
+        return connection;
     }
+
+//    public Connection getConnection() {
+//        return this.connection;
+//    }
 
     public void releaseConnection() {
         if (this.connection != null) {
@@ -60,8 +87,10 @@ public class DBConnectionManager {
 //        Driver driver = DriverManager.getDriver("jdbc:derby:/db/user-platform;create=true");
 //        Connection connection = driver.connect("jdbc:derby:/db/user-platform;create=true", new Properties());
 
-        String databaseURL = "jdbc:derby:/db/user-platform;create=true";
-        Connection connection = DriverManager.getConnection(databaseURL);
+//        String databaseURL = "jdbc:derby:/db/user-platform;create=true";
+//        Connection connection = DriverManager.getConnection(databaseURL);
+
+        Connection connection = new DBConnectionManager().getConnection();
 
         Statement statement = connection.createStatement();
         // 删除 users 表
